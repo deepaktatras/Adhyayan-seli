@@ -1,2 +1,0 @@
-[22-Jan-2016 23:56:56 America/Chicago] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home4/adhyayan/public_html/moodle/login/index.php on line 372
-[20-Jul-2016 17:24:08 Asia/Kolkata] Cannot find session record 6b0325937d210671e06b469a28bc7d6d for user 2, creating new session.
