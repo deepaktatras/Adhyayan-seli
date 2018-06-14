@@ -1,0 +1,57 @@
+UPDATE `d_review_principal_tenure` SET `tenure` = '20 & above' WHERE `d_review_principal_tenure`.`tenure_id` = 6;
+
+UPDATE `d_review_avgstafftenure` SET `avg_tenure` = 'Less than a year' WHERE `d_review_avgstafftenure`.`avgstafftenure_id` = 1;
+UPDATE `d_review_avgstafftenure` SET `avg_tenure` = 'Less than 5 yrs' WHERE `d_review_avgstafftenure`.`avgstafftenure_id` = 2;
+UPDATE `d_review_avgstafftenure` SET `avg_tenure` = 'Between 5-10 yrs' WHERE `d_review_avgstafftenure`.`avgstafftenure_id` = 3;
+INSERT INTO `d_review_avgstafftenure` (`avgstafftenure_id`, `avg_tenure`) VALUES (NULL, 'More than 10 yrs');
+
+ALTER TABLE `d_post_review` CHANGE `student_body_activity` `student_body_activity` INT(11) NULL DEFAULT NULL COMMENT 'Student leaders role';
+ALTER TABLE `d_post_review` CHANGE `middle_leaders` `middle_leaders` INT(11) NULL DEFAULT NULL COMMENT 'Middle leaders (Coordinator/Supervisor)';
+ALTER TABLE `d_post_review` CHANGE `average_number_students_class` `average_number_students_class` INT(11) NULL DEFAULT NULL COMMENT 'Avg. students and teachers in single class';
+
+UPDATE `d_review_students` SET `student_count` = '60 - 70' WHERE `d_review_students`.`student_id` = 5;
+INSERT INTO `d_review_students` (`student_id`, `student_count`) VALUES (NULL, '70 and above');
+
+------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE `d_review_teachers` (
+  `teacher_id` int(11) NOT NULL,
+  `average_teacher_class` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+INSERT INTO `d_review_teachers` (`teacher_id`, `average_teacher_class`) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
+
+ALTER TABLE `d_review_teachers`
+  ADD PRIMARY KEY (`teacher_id`);
+
+ALTER TABLE `d_review_teachers`
+  MODIFY `teacher_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+CREATE TABLE `h_post_review_student_teacher` (
+  `id` int(11) NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL,
+  `school_level_id` int(11) NOT NULL,
+  `post_review_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `h_post_review_student_teacher`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_id` (`student_id`),
+  ADD KEY `teacher_id` (`teacher_id`),
+  ADD KEY `school_level_id` (`school_level_id`),
+  ADD KEY `post_review_id` (`post_review_id`);
+
+ALTER TABLE `h_post_review_student_teacher`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `h_post_review_student_teacher`
+  ADD CONSTRAINT `ck_h_post_review_student_teacher_d_post_review` FOREIGN KEY (`post_review_id`) REFERENCES `d_post_review` (`post_review_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ck_h_post_review_student_teacher_d_review_student` FOREIGN KEY (`student_id`) REFERENCES `d_review_students` (`student_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ck_h_post_review_student_teacher_d_review_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `d_review_teachers` (`teacher_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ck_h_post_review_student_teacher_d_school_level` FOREIGN KEY (`school_level_id`) REFERENCES `d_school_level` (`school_level_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

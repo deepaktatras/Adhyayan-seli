@@ -1,0 +1,59 @@
+ALTER TABLE `adhyayan_test_01082016`.`d_assessment` 
+ADD COLUMN `isLocked` TINYINT(1) NULL DEFAULT NULL COMMENT '1=locked\n0=unlocked' AFTER `external_award`;
+
+ALTER TABLE `adh`.`d_group_assessment` 
+ADD COLUMN `islocked` TINYINT(1) NULL DEFAULT NULL COMMENT '1=locked\n0=unlocked' AFTER `creation_date`;
+
+
+DROP procedure IF EXISTS `assign_teacher_assessment`;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_teacher_assessment`(IN `param_gaid` INT,IN `create_date` DATETIME)
+BEGIN
+
+DECLARE gaid INT;
+DECLARE cid INT;
+DECLARE cd DATETIME;
+DECLARE tid INT;
+DECLARE catid INT;
+DECLARE aid INT;
+DECLARE did INT;
+
+DECLARE new_aid INT;
+
+DECLARE done INT DEFAULT FALSE;
+DECLARE cnt INT DEFAULT 0;
+
+DECLARE ga_rows CURSOR FOR SELECT ga.group_assessment_id,ga.client_id,ga.creation_date,at.teacher_id,at.teacher_category_id,at.assessor_id,ad.diagnostic_id
+FROM `d_group_assessment` ga
+inner join h_group_assessment_teacher at on ga.group_assessment_id=at.group_assessment_id
+inner join h_group_assessment_diagnostic ad on at.group_assessment_id=ad.group_assessment_id and at.teacher_category_id=ad.teacher_category_id 
+where ga.group_assessment_id= param_gaid;
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+ OPEN ga_rows;
+  read_loop: LOOP
+    FETCH ga_rows INTO gaid, cid,cd, tid,catid,aid,did;
+    IF done THEN
+      LEAVE read_loop;
+    END IF;
+    
+    INSERT INTO d_assessment(client_id, diagnostic_id,create_date,islocked) VALUES(cid,did,create_date,1);
+    
+    SET new_aid = LAST_INSERT_ID();
+    
+    INSERT INTO h_assessment_ass_group(group_assessment_id,assessment_id) VALUES(param_gaid,new_aid);
+    
+    INSERT INTO h_assessment_user(user_id,role,assessment_id) VALUES(tid,3,new_aid),(aid,4,new_aid);
+        
+    SET cnt=cnt+1;
+    
+  END LOOP;
+  CLOSE ga_rows;  
+  
+  SELECT cnt;
+  
+  UPDATE d_group_assessment SET isLocked=1 WHERE group_assessment_id = param_gaid;
+END$$
+
+DELIMITER ;

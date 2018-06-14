@@ -1,0 +1,15 @@
+CREATE TABLE `adh`.`z_user_profile_excel_error_log` (
+  `id` INT NOT NULL,
+  `row_no` INT NULL,
+  `row_data` TEXT NULL,
+  `file_id` INT NULL,
+  `added_at` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `user_profile_excel_file_fk_idx` (`file_id` ASC),
+  CONSTRAINT `user_profile_excel_file_fk`
+    FOREIGN KEY (`file_id`)
+    REFERENCES `adh`.`d_file` (`file_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+ALTER TABLE `adh`.`z_user_profile_excel_error_log` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;

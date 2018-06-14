@@ -1,0 +1,25 @@
+# PHP CircleCI 2.0 configuration file
+# 
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: alpine:3.7 #circleci/php:7.1.8-browsers
+    working_directory: ~/Adhyayan
+    steps:
+      - deploy:
+          name: Deploy to Server
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "staging_copy" ]; then
+              apk update
+              apk add openssh
+              ssh -i {deploy_key_path} -o StrictHostKeyChecking=no -l ${deploy_user} stage.app.adhyayan.asia "cd /var/www/Adhyayan-app/Staging/; git checkout ${CIRCLE_BRANCH}; git pull;"
+            fi
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              apk update
+              apk add openssh
+              ssh -i {deploy_key_path} -o StrictHostKeyChecking=no -l ${deploy_user} stage.app.adhyayan.asia "cd /var/www/Adhyayan-app/Production/; git checkout ${CIRCLE_BRANCH}; git pull;"
+            fi

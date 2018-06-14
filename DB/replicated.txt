@@ -1,0 +1,2 @@
+ALTER TABLE `d_assessment` ADD `is_replicated` INT NOT NULL AFTER `rejection_reason`;
+ALTER TABLE `d_assessment` ADD `replicated_date_time` DATETIME NOT NULL AFTER `is_replicated`;

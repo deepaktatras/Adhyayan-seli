@@ -1,0 +1,1 @@
+15 8 * * * wget http://adhyayantest.algoinsighttest.com/adhyayanReloaded/backup-to-googledrive/backuptogoogledrive.php

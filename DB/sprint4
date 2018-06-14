@@ -1,0 +1,13 @@
+ALTER TABLE `d_client` ADD `is_guest` INT NOT NULL AFTER `is_web`;
+
+ALTER TABLE `d_user` ADD `create_date` INT NULL DEFAULT NULL AFTER `has_view_video`;
+ALTER TABLE `d_user` CHANGE `create_date` `create_date` DATETIME NULL;
+ALTER TABLE `d_user` ADD `createdby` INT NULL DEFAULT NULL AFTER `create_date`;
+
+ALTER TABLE `d_user` ADD `modify_date` DATETIME NULL DEFAULT NULL AFTER `createdby`;
+ALTER TABLE `d_user` ADD `modifyby` INT NULL DEFAULT NULL AFTER `modify_date`;
+
+ALTER TABLE `d_diagnostic` ADD `iscreateNet` INT NOT NULL AFTER `diagnostic_type`;
+
+$currentUser=isset($this->user ['user_id'])?$this->user['user_id']:NULL;
+

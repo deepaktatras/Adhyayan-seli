@@ -1,0 +1,4 @@
+update `d_AQS_data` set  school_aqs_pref_start_date  =DATE_FORMAT(STR_TO_DATE(school_aqs_pref_start_date  , '%m/%d/%Y'),'%d-%m-%Y')  where school_aqs_pref_start_date   like '%/%';
+update `d_AQS_data` set  school_aqs_pref_end_date =DATE_FORMAT(STR_TO_DATE(school_aqs_pref_end_date , '%m/%d/%Y'),'%d-%m-%Y')  where school_aqs_pref_end_date  like '%/%';
+
+update `h_user_teacher_attr` set value=DATE_FORMAT(STR_TO_DATE(value , '%m-%d-%Y'),'%d-%m-%Y') WHERE value like '%-%';

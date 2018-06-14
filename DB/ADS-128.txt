@@ -1,0 +1,7 @@
+ALTER TABLE `h_group_assessment_recommendations` ADD `dept_id` INT NULL DEFAULT NULL AFTER `diagnostic_id`;
+update  `h_group_assessment_recommendations` set `dept_id`=0;
+
+
+
+select *,sum(if(assessment_type_id=1,num,0)) as school,sum(if(assessment_type_id=2,1,0)) as teacher ,sum(if(assessment_type_id=4,1,0)) as student,sum(if(assessment_type_id=5,num,0)) as student from (SELECT b.assessment_type_id,b.d_sub_assessment_type_id,sub_role_name,num,sub_role_order,sub_role_id,group_assessment_id FROM d_user_sub_role a left JOIN (SELECT t4.assessment_type_id,t3.d_sub_assessment_type_id,count(t1.assessment_id) num,1 as user_sub_role,hag.group_assessment_id FROM h_assessment_user t1 Left Join d_user t2 On (t1.user_id=t2.user_id) Left Join d_assessment t3 On (t3.assessment_id=t1.assessment_id) Left Join d_diagnostic t4 on (t3.diagnostic_id=t4.diagnostic_id) LEFT JOIN h_assessment_ass_group hag on hag.assessment_id=t3.assessment_id WHERE t1.role = '4' AND t2.email = 'poonam.choksi@adhyayan.asia' group by assessment_type_id) b on a.sub_role_id=b.user_sub_role where a.sub_role_id=1) xyz group by xyz.assessment_type_id
+

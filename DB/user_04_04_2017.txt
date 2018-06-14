@@ -1,0 +1,58 @@
+INSERT INTO `d_user_role` (`role_id`, `role_name`, `order`) VALUES (NULL, 'Facilitator', '9');
+
+INSERT INTO `adhyayan_prod`.`d_user_sub_role` (`sub_role_id`, `user_role_id`, `sub_role_name`, `sub_role_order`) VALUES ('5', '9', 'LED', '1');
+
+INSERT INTO `adhyayan_prod`.`d_user_sub_role` (`sub_role_id`, `user_role_id`, `sub_role_name`, `sub_role_order`) VALUES ('6', '9', 'Co-Facilitator', '2');
+
+INSERT INTO `adhyayan_prod`.`d_user_sub_role` (`sub_role_id`, `user_role_id`, `sub_role_name`, `sub_role_order`) VALUES ('7', '9', 'Attended', '3');
+
+
+///////////////////////////Workshop///////////////
+
+CREATE TABLE `d_workshop_facilitator` (
+  `workshop_id` int(11) NOT NULL,
+  `workshop_name` varchar(255) DEFAULT NULL,
+  `workshop_date` date DEFAULT NULL,
+  `workshop_location` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `d_workshop_facilitator`
+  ADD PRIMARY KEY (`workshop_id`);
+
+ALTER TABLE `d_workshop_facilitator`
+  MODIFY `workshop_id` int(11) NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `h_workshop_facilitator_user` (
+  `id` int(11) NOT NULL,
+  `workshop_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `user_type_role` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `h_workshop_facilitator_user`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workshop_id` (`workshop_id`),
+  ADD KEY `user_id` (`user_id`);
+
+ALTER TABLE `h_workshop_facilitator_user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `h_workshop_facilitator_user` CHANGE `user_type_role` `sub_user_type_role` INT(11) NULL DEFAULT NULL;
+
+CREATE TABLE `z_history_users` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `client_id_from` int(11) NOT NULL,
+  `client_id_to` int(11) NOT NULL,
+  `users_roles_from` text NOT NULL,
+  `users_roles_to` text NOT NULL,
+  `user_action` varchar(255) NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `action_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `z_history_users`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `z_history_users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

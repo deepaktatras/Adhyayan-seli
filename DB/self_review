@@ -1,0 +1,7 @@
+ALTER TABLE `d_diagnostic` ADD `isdefaultselfreview` INT NOT NULL AFTER `equivalence_id`;
+
+ALTER TABLE `d_diagnostic` ADD `isfreeselfreview` INT NOT NULL AFTER `isdefaultselfreview`;
+
+
+
+INSERT INTO `d_board` (`board_id`, `board`) VALUES (NULL, 'NIOS');

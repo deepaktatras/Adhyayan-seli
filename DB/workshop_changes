@@ -1,0 +1,87 @@
+
+CREATE TABLE `d_workshop_document_category` (
+  `workshop_doc_cat_id` int(11) NOT NULL,
+  `workshop_doc_cat_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `d_workshop_document_category`
+--
+
+INSERT INTO `d_workshop_document_category` (`workshop_doc_cat_id`, `workshop_doc_cat_name`) VALUES
+(1, 'Workshop plan'),
+(2, 'Handouts'),
+(3, 'Reports'),
+(4, 'Pictures & Videos');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `d_workshop_document_category`
+--
+ALTER TABLE `d_workshop_document_category`
+  ADD PRIMARY KEY (`workshop_doc_cat_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `d_workshop_document_category`
+--
+ALTER TABLE `d_workshop_document_category`
+  MODIFY `workshop_doc_cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;COMMIT;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+CREATE TABLE `d_workshop_prog_type` (
+  `prog_type_id` int(11) NOT NULL,
+  `prog_type` varchar(255) NOT NULL,
+  `order_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `d_workshop_prog_type`
+--
+
+INSERT INTO `d_workshop_prog_type` (`prog_type_id`, `prog_type`, `order_id`) VALUES
+(1, 'LMT', 1),
+(2, 'Standalone', 2),
+(3, 'Yearlong', 3),
+(4, 'Student leadership', 4),
+(5, 'Teacher Performance Review', 5);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `d_workshop_prog_type`
+--
+ALTER TABLE `d_workshop_prog_type`
+  ADD PRIMARY KEY (`prog_type_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `d_workshop_prog_type`
+--
+ALTER TABLE `d_workshop_prog_type`
+  MODIFY `prog_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;COMMIT;
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+ALTER TABLE `h_workshop_document` ADD `workshop_doc_cat_id` INT NOT NULL AFTER `document_id`;
+
+ALTER TABLE `d_workshops` ADD `prog_type_id` INT NULL DEFAULT NULL AFTER `programme_id`, ADD `workshop_changes` FLOAT(10,2) NULL DEFAULT NULL AFTER `prog_type_id`;
+ALTER TABLE `d_workshops` CHANGE `workshop_changes` `workshop_charges` FLOAT(10,2) NULL DEFAULT NULL;
+
+ALTER TABLE `d_workshops` ADD `workshop_school` INT NULL DEFAULT NULL AFTER `workshop_location`, ADD `workshop_school_none` VARCHAR(255) NOT NULL AFTER `workshop_school`;
+
+ALTER TABLE `d_workshops` ADD FOREIGN KEY (`prog_type_id`) REFERENCES `d_workshop_prog_type`(`prog_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `d_workshops` ADD `workshop_payment_facilitator` TEXT NOT NULL AFTER `workshop_charges`;

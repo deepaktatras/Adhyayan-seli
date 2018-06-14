@@ -1,0 +1,1 @@
+ALTER TABLE `d_diagnostic` ADD `isGuestuser` INT NOT NULL AFTER `iscreateNet`;

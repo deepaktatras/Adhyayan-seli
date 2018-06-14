@@ -1,0 +1,31 @@
+ALTER TABLE `d_file` 
+ENGINE = InnoDB ;
+
+
+
+CREATE TABLE `d_resources` (
+  `resource_id` int(11) NOT NULL AUTO_INCREMENT,
+  `resource_title` varchar(60) DEFAULT NULL,
+  `resource_description` varchar(500) DEFAULT NULL,
+  `resource_uploaded_by` int(11) NOT NULL,
+  `resource_updated_by` int(11) NOT NULL,
+  `resource_added_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `resource_modified_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`resource_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `h_resource_file` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `file_id` int(11) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  `user_role_id` varchar(45) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL,
+  `modified_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_res_file_idx` (`file_id`),
+  KEY `fk_res_id_idx` (`resource_id`),
+  CONSTRAINT `fk_res_file` FOREIGN KEY (`file_id`) REFERENCES `d_file` (`file_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_res_id` FOREIGN KEY (`resource_id`) REFERENCES `d_resources` (`resource_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

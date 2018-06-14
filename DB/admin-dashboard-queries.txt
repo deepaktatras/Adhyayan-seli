@@ -1,0 +1,350 @@
+drop view v_kpaData;
+create view v_kpaData as
+SELECT a.client_id,cl.client_name,cl.country_id,cl.city_id,cl.state_id,cl.province,d.diagnostic_id,d.name,a.assessment_id,a.d_sub_assessment_type_id,a.award_scheme_id,a.tier_id,k.kpa_id,k.kpa_name,h.kpa_instance_id,hu.user_id,
+s.d_rating_rating_id FROM 
+d_kpa k  inner join h_kpa_diagnostic h on h.kpa_id=k.kpa_id
+inner join d_diagnostic d on d.diagnostic_id=h.diagnostic_id and d.assessment_type_id=1
+inner join d_assessment a on a.diagnostic_id=d.diagnostic_id 
+inner join h_assessment_user hu on hu.assessment_id=a.assessment_id
+inner join h_kpa_instance_score s on h.kpa_instance_id=s.kpa_instance_id and a.assessment_id=s.assessment_id and s.assessor_id=hu.user_id
+inner join d_client cl on a.client_id=cl.client_id
+order by diagnostic_id,assessment_id,kpa_id;
+
+select * from v_kpaData;
+
+drop view if exists v_aqs;
+create view v_aqs as
+select cl.client_id,cl.country_id,cl.city_id,cl.state_id,cl.province,cl.client_name,a.assessment_id,a.tier_id,a.award_scheme_id,a.diagnostic_id,aqs.board_id,aqs.school_type_id,aqs.no_of_students,aqs.student_type_id,aqs.annual_fee,aqs.school_aqs_pref_start_date,aqs.school_aqs_pref_end_date,cn.network_id from d_assessment a
+				inner join d_client cl on a.client_id=cl.client_id
+				inner join d_diagnostic d on a.diagnostic_id = d.diagnostic_id and d.assessment_type_id=1            
+				inner join d_AQS_data aqs on a.aqsdata_id = aqs.id
+                inner join d_fees f on f.fee_text=aqs.annual_fee
+                inner join d_school_strength str on str.strength_text=aqs.no_of_students           
+                 left join h_client_network cn on cn.client_id=cl.client_id;
+
+select * from v_aqs;   
+
+drop view if exists v_kpaKqData;
+create view v_kpaKqData as
+SELECT a.client_id,cl.client_name,cl.country_id,cl.city_id,cl.state_id,cl.province,d.diagnostic_id,d.name,a.assessment_id,a.d_sub_assessment_type_id,a.award_scheme_id,a.tier_id,k.kpa_id,k.kpa_name,h.kpa_instance_id,hu.user_id,
+s.d_rating_rating_id as kparating,kq.key_question_id,kq.key_question_text,ki.d_rating_rating_id as kqrating FROM 
+d_kpa k  inner join h_kpa_diagnostic h on h.kpa_id=k.kpa_id
+inner join d_diagnostic d on d.diagnostic_id=h.diagnostic_id and d.assessment_type_id=1
+inner join d_assessment a on a.diagnostic_id=d.diagnostic_id 
+inner join h_assessment_user hu on hu.assessment_id=a.assessment_id
+inner join h_kpa_instance_score s on h.kpa_instance_id=s.kpa_instance_id and a.assessment_id=s.assessment_id and s.assessor_id=hu.user_id
+inner join h_kpa_kq kk on kk.kpa_instance_id = s.kpa_instance_id 
+inner join d_key_question kq on kq.key_question_id=kk.key_question_id
+inner join h_kq_instance_score ki on ki.key_question_instance_id=kk.key_question_instance_id and ki.assessment_id=a.assessment_id and ki.assessor_id=hu.user_id
+inner join d_client cl on a.client_id=cl.client_id
+order by diagnostic_id,assessment_id,kpa_id;
+
+select * from v_kpaKqData;
+
+
+drop view if exists v_kpaKqSqData;
+create view v_kpaKqSqData as
+SELECT a.client_id,cl.client_name,cl.country_id,cl.city_id,cl.state_id,cl.province,d.diagnostic_id,d.name,a.assessment_id,a.d_sub_assessment_type_id,a.award_scheme_id,a.tier_id,k.kpa_id,k.kpa_name,h.kpa_instance_id,hu.user_id,
+s.d_rating_rating_id as kparating,kq.key_question_id,kq.key_question_text,ki.d_rating_rating_id as kqrating,
+cq.core_question_id,cq.core_question_text,cs.d_rating_rating_id as cqrating FROM 
+d_kpa k  inner join h_kpa_diagnostic h on h.kpa_id=k.kpa_id
+inner join d_diagnostic d on d.diagnostic_id=h.diagnostic_id and d.assessment_type_id=1
+inner join d_assessment a on a.diagnostic_id=d.diagnostic_id 
+inner join h_assessment_user hu on hu.assessment_id=a.assessment_id
+inner join h_kpa_instance_score s on h.kpa_instance_id=s.kpa_instance_id and a.assessment_id=s.assessment_id and s.assessor_id=hu.user_id
+inner join h_kpa_kq kk on kk.kpa_instance_id = s.kpa_instance_id 
+inner join d_key_question kq on kq.key_question_id=kk.key_question_id
+inner join h_kq_instance_score ki on ki.key_question_instance_id=kk.key_question_instance_id and ki.assessment_id=a.assessment_id and ki.assessor_id=hu.user_id
+inner join h_kq_cq kc on kc.key_question_instance_id = kk.kpa_instance_id
+inner join d_core_question cq on cq.core_question_id = kc.core_question_id
+inner join h_cq_score cs on cs.core_question_instance_id = kc.core_question_instance_id and a.assessment_id=cs.assessment_id and cs.assessor_id=hu.user_id
+inner join d_client cl on a.client_id=cl.client_id
+order by diagnostic_id,assessment_id,kpa_id;
+
+select * from v_kpaKqSqData;
+
+
+drop view if exists v_kpaKqSqJSData;
+create view v_kpaKqSqJsData as
+SELECT a.client_id,cl.client_name,cl.country_id,cl.city_id,cl.state_id,cl.province,d.diagnostic_id,d.name,a.assessment_id,a.d_sub_assessment_type_id,a.award_scheme_id,a.tier_id,k.kpa_id,k.kpa_name,h.kpa_instance_id,hu.user_id,
+s.d_rating_rating_id as kparating,kq.key_question_id,kq.key_question_text,ki.d_rating_rating_id as kqrating,
+cq.core_question_id,cq.core_question_text,cs.d_rating_rating_id as cqrating, js.judgement_statement_id,js.judgement_statement_text,fs.rating_id as jsrating FROM 
+d_kpa k  inner join h_kpa_diagnostic h on h.kpa_id=k.kpa_id
+inner join d_diagnostic d on d.diagnostic_id=h.diagnostic_id and d.assessment_type_id=1
+inner join d_assessment a on a.diagnostic_id=d.diagnostic_id 
+inner join h_assessment_user hu on hu.assessment_id=a.assessment_id
+inner join h_kpa_instance_score s on h.kpa_instance_id=s.kpa_instance_id and a.assessment_id=s.assessment_id and s.assessor_id=hu.user_id
+inner join h_kpa_kq kk on kk.kpa_instance_id = s.kpa_instance_id 
+inner join d_key_question kq on kq.key_question_id=kk.key_question_id
+inner join h_kq_instance_score ki on ki.key_question_instance_id=kk.key_question_instance_id and ki.assessment_id=a.assessment_id and ki.assessor_id=hu.user_id
+inner join h_kq_cq kc on kc.key_question_instance_id = kk.kpa_instance_id
+inner join d_core_question cq on cq.core_question_id = kc.core_question_id
+inner join h_cq_score cs on cs.core_question_instance_id = kc.core_question_instance_id and a.assessment_id=cs.assessment_id and cs.assessor_id=hu.user_id
+inner join h_cq_js_instance cqjs on cqjs.core_question_instance_id=kc.core_question_instance_id
+inner join d_judgement_statement js on js.judgement_statement_id = cqjs.judgement_statement_id
+inner join f_score fs on cqjs.judgement_statement_instance_id=fs.judgement_statement_instance_id and a.assessment_id=fs.assessment_id and fs.assessor_id=hu.user_id and isFinal=1
+inner join d_client cl on a.client_id=cl.client_id
+order by diagnostic_id,assessment_id,kpa_id;
+
+select * from v_kpaKqSqJsData;
+
+-- Approach 2
+drop view if exists v_aqs;
+create view v_aqs as
+select cl.client_id,cl.country_id,cl.city_id,cl.state_id,cl.province,cl.client_name,a.assessment_id,a.tier_id,a.award_scheme_id,a.diagnostic_id,aqs.board_id,aqs.school_type_id,aqs.no_of_students,aqs.student_type_id,aqs.annual_fee,aqs.school_aqs_pref_start_date,aqs.school_aqs_pref_end_date,cn.network_id from d_assessment a
+				inner join d_client cl on a.client_id=cl.client_id
+				inner join d_diagnostic d on a.diagnostic_id = d.diagnostic_id and d.assessment_type_id=1            
+				inner join d_AQS_data aqs on a.aqsdata_id = aqs.id
+                inner join d_fees f on f.fee_text=aqs.annual_fee
+                inner join d_school_strength str on str.strength_text=aqs.no_of_students           
+                 left join h_client_network cn on cn.client_id=cl.client_id;
+
+select * from v_aqs; 
+
+
+drop view v_kpaData;
+create view v_kpaData as
+SELECT a.client_id,d.diagnostic_id,a.assessment_id,a.d_sub_assessment_type_id,a.award_scheme_id,a.tier_id,k.kpa_id,h.kpa_instance_id,hu.user_id,
+s.d_rating_rating_id FROM 
+d_kpa k  inner join h_kpa_diagnostic h on h.kpa_id=k.kpa_id
+inner join d_diagnostic d on d.diagnostic_id=h.diagnostic_id 
+inner join d_assessment a on a.diagnostic_id=d.diagnostic_id 
+inner join h_assessment_user hu on hu.assessment_id=a.assessment_id
+inner join h_kpa_instance_score s on h.kpa_instance_id=s.kpa_instance_id and a.assessment_id=s.assessment_id and s.assessor_id=hu.user_id
+ where d.assessment_type_id=1;
+ select * from v_kpaData;
+ 
+drop view if exists v_kq;
+create view v_kq as 
+select assessment_id,kpa_instance_id,key_question_id,key_question_instance_id,d_rating_rating_id,assessor_id from 
+h_kq_instance_score inner join h_kpa_kq using(key_question_instance_id);
+
+select * from v_kq;
+              
+drop view if exists v_sq;
+create view v_sq as 
+select cs.assessment_id,kc.core_question_id,kc.key_question_instance_id,cs.core_question_instance_id,cs.d_rating_rating_id,cs.assessor_id from 
+h_kq_cq kc inner join h_cq_score cs on cs.core_question_instance_id = kc.core_question_instance_id
+;				 
+ 
+select * from v_sq;
+
+drop view if exists v_js;
+create view v_js as 
+select fs.assessment_id,cj.core_question_instance_id,cj.judgement_statement_id,fs.judgement_statement_instance_id,fs.rating_id,fs.assessor_id from 
+h_cq_js_instance cj inner join f_score fs on fs.judgement_statement_instance_id = cj.judgement_statement_instance_id
+where fs.isFinal=1
+;
+
+
+------------ final
+
+set profiling=1; 
+drop temporary table if exists t_kpaData;
+create temporary table t_kpaData(client_id int(11),diagnostic_id int(11),assessment_id int(11),d_sub_assessment_type_id int(11),award_scheme_id int(11),tier_id int(11),kpa_id int(11),kpa_instance_id int(11),user_id int(11),role int(11),d_rating_rating_id int(11),
+INDEX idx_tkpa(assessment_id,user_id,kpa_instance_id));
+insert into t_kpaData
+SELECT a.client_id,d.diagnostic_id,a.assessment_id,a.d_sub_assessment_type_id,a.award_scheme_id,a.tier_id,k.kpa_id,h.kpa_instance_id,hu.user_id,hu.role,
+s.d_rating_rating_id FROM 
+d_kpa k  inner join h_kpa_diagnostic h on h.kpa_id=k.kpa_id
+inner join d_diagnostic d on d.diagnostic_id=h.diagnostic_id 
+inner join d_assessment a on a.diagnostic_id=d.diagnostic_id 
+inner join h_assessment_user hu on hu.assessment_id=a.assessment_id 
+inner join h_kpa_instance_score s on h.kpa_instance_id=s.kpa_instance_id and a.assessment_id=s.assessment_id and s.assessor_id=hu.user_id
+ where d.assessment_type_id=1 and hu.role=4;
+ 
+ drop temporary table if exists t_kq;
+create temporary table t_kq(assessment_id int(11),kpa_instance_id int(11),key_question_id int(11),key_question_instance_id int(11),d_rating_rating_id int(11),assessor_id int(11), INDEX(assessment_id,assessor_id,kpa_instance_id)) ;
+insert into t_kq
+select ks.assessment_id,kpa_instance_id,key_question_id,key_question_instance_id,d_rating_rating_id,assessor_id from 
+h_kq_instance_score ks inner join h_kpa_kq using(key_question_instance_id)
+inner join h_assessment_user hu on ks.assessor_id=hu.user_id and ks.assessment_id=hu.assessment_id 
+inner join d_assessment a on a.assessment_id=ks.assessment_id
+inner join d_diagnostic d on d.diagnostic_id=a.diagnostic_id 
+where d.assessment_type_id=1 and  hu.role=4;
+;            
+
+drop  temporary table if exists t_sq;
+create  temporary table t_sq(assessment_id int(11),core_question_id int(11),key_question_instance_id int(11),core_question_instance_id int(11),d_rating_rating_id int(11),assessor_id int(11),
+index idx_js(assessment_id,assessor_id,key_question_instance_id));
+insert into t_sq
+select cs.assessment_id,kc.core_question_id,kc.key_question_instance_id,cs.core_question_instance_id,cs.d_rating_rating_id,cs.assessor_id from 
+h_kq_cq kc inner join h_cq_score cs on cs.core_question_instance_id = kc.core_question_instance_id
+inner join h_assessment_user hu on cs.assessor_id=hu.user_id and cs.assessment_id=hu.assessment_id
+inner join d_assessment a on a.assessment_id=cs.assessment_id
+inner join d_diagnostic d on d.diagnostic_id=a.diagnostic_id 
+where d.assessment_type_id=1 and  hu.role=4
+;		
+
+
+drop temporary table if exists t_js;
+create temporary table t_js(assessment_id int(11),core_question_instance_id int(11),judgement_statement_id int(11),judgement_statement_instance_id int(11),rating_id int(11),assessor_id int(11),
+index idx_js(assessment_id,assessor_id,core_question_instance_id));
+insert into t_js 
+select fs.assessment_id,cj.core_question_instance_id,cj.judgement_statement_id,fs.judgement_statement_instance_id,fs.rating_id,fs.assessor_id from 
+h_cq_js_instance cj inner join f_score fs on fs.judgement_statement_instance_id = cj.judgement_statement_instance_id
+inner join h_assessment_user hu on fs.assessor_id=hu.user_id and fs.assessment_id=hu.assessment_id
+ inner join d_assessment a on a.assessment_id=fs.assessment_id
+ inner join d_diagnostic d on d.diagnostic_id=a.diagnostic_id 
+where d.assessment_type_id=1 and hu.role=4 and fs.isFinal=1;
+
+
+ select kpa.assessment_id,kpa.kpa_instance_id,kpa.d_rating_rating_id,kq.key_question_instance_id,kq.d_rating_rating_id,sq.core_question_instance_id,sq.d_rating_rating_id,js.rating_id,js.judgement_statement_instance_id from  t_kpaData kpa
+inner join t_kq kq on kq.assessment_id=kpa.assessment_id and kq.assessor_id=kpa.user_id and  kpa.kpa_instance_id=kq.kpa_instance_id
+inner join t_sq sq on sq.assessment_id=kq.assessment_id and kq.assessor_id=sq.assessor_id and sq.key_question_instance_id=kq.key_question_instance_id
+inner join t_js js on js.assessment_id=sq.assessment_id and sq.assessor_id=js.assessor_id and js.core_question_instance_id=sq.core_question_instance_id
+  ;
+
+drop view if exists v_aqs;
+create view v_aqs as
+select cl.client_id,cl.country_id,cl.city_id,cl.state_id,cl.province,cl.client_name,a.assessment_id,a.tier_id,a.award_scheme_id,a.diagnostic_id,aqs.board_id,aqs.school_type_id,aqs.no_of_students,aqs.student_type_id,aqs.annual_fee,aqs.school_aqs_pref_start_date,aqs.school_aqs_pref_end_date,cn.network_id from d_assessment a
+				inner join d_client cl on a.client_id=cl.client_id
+				inner join d_diagnostic d on a.diagnostic_id = d.diagnostic_id and d.assessment_type_id=1            
+				inner join d_AQS_data aqs on a.aqsdata_id = aqs.id
+                inner join d_fees f on f.fee_text=aqs.annual_fee
+                inner join d_school_strength str on str.strength_text=aqs.no_of_students           
+                 left join h_client_network cn on cn.client_id=cl.client_id;
+
+select * from v_aqs;   
+show profiles;
+-----------------------final last
+CREATE DEFINER=`algoinsi_adh`@`%` PROCEDURE `Pivot`(
+    IN tbl_name VARCHAR(99) ,       -- table name (or db.tbl)
+    IN base_cols VARCHAR(99),      -- column(s) on the left, separated by commas
+    IN pivot_col VARCHAR(64),      -- name of column to put across the top
+    IN tally_col VARCHAR(64),      -- name of column to SUM up
+    IN where_clause VARCHAR(99),   -- empty string or "WHERE ..."
+    IN order_by VARCHAR(99)        -- empty string or "ORDER BY ..."; usually the base_cols
+    )
+    DETERMINISTIC
+    SQL SECURITY INVOKER
+BEGIN
+    -- Find the distinct values
+    -- Build the SUM()s
+    SET @subq = CONCAT('SELECT DISTINCT ', pivot_col, ' AS val ',
+                    ' FROM ', tbl_name, ' ', where_clause, ' ORDER BY 1') COLLATE utf8_unicode_ci;
+    -- select @subq;
+
+    SET @cc1 = "CONCAT('count( distinct IF(&p = ', &v, ', &t, 0)) AS ', &v)" COLLATE utf8_unicode_ci;
+    SET @cc2 = REPLACE(@cc1, '&p', pivot_col) COLLATE utf8_unicode_ci;
+    SET @cc3 = REPLACE(@cc2, '&t', tally_col) COLLATE utf8_unicode_ci;
+    -- select @cc2, @cc3;
+    SET @qval = CONCAT("'\"', val, '\"'") COLLATE utf8_unicode_ci;
+    -- select @qval;
+    SET @cc4 = REPLACE(@cc3, '&v', @qval) COLLATE utf8_unicode_ci;
+    -- select @cc4;
+
+    SET SESSION group_concat_max_len = 10000;   -- just in case
+    SET @stmt = CONCAT(
+            'SELECT  GROUP_CONCAT(', @cc4, ' SEPARATOR ",\n")  INTO @sums',
+            ' FROM ( ', @subq, ' ) AS top') COLLATE utf8_unicode_ci;
+   --  select @stmt;
+    PREPARE _sql FROM @stmt;
+    EXECUTE _sql;                      -- Intermediate step: build SQL for columns
+    DEALLOCATE PREPARE _sql;
+    -- Construct the query and perform it
+    SET @stmt2 = CONCAT(
+            'SELECT ',
+                base_cols, ',\n',
+                @sums,
+                ',\n count( distinct ', tally_col, ') AS Total'
+            '\n FROM ', tbl_name, ' ',
+            where_clause,
+            ' GROUP BY ', base_cols,
+            '\n WITH ROLLUP',
+            '\n', order_by
+        ) COLLATE utf8_unicode_ci;
+   -- select @stmt2;                    -- The statement that generates the result
+    PREPARE _sql FROM @stmt2;
+    EXECUTE _sql;                     -- The resulting pivot table ouput
+    DEALLOCATE PREPARE _sql;
+    -- For debugging / tweaking, SELECT the various @variables after CALLing.
+END
+
+drop  table if exists t_kpaData;
+create  table t_kpaData(client_id int(11),diagnostic_id int(11),assessor_id int(11),assessment_id int(11),d_sub_assessment_type_id int(11),award_scheme_id int(11),tier_id int(11),kpa_id int(11),kpa_instance_id int(11),user_id int(11),role int(11),d_rating_rating_id int(11),
+INDEX idx_tkpa(assessment_id,user_id,kpa_instance_id));
+insert into t_kpaData
+SELECT a.client_id,d.diagnostic_id,hu.user_id,a.assessment_id,a.d_sub_assessment_type_id,a.award_scheme_id,a.tier_id,k.kpa_id,h.kpa_instance_id,hu.user_id,hu.role,
+s.d_rating_rating_id FROM 
+d_kpa k  inner join h_kpa_diagnostic h on h.kpa_id=k.kpa_id
+inner join d_diagnostic d on d.diagnostic_id=h.diagnostic_id 
+inner join d_assessment a on a.diagnostic_id=d.diagnostic_id 
+inner join h_assessment_user hu on hu.assessment_id=a.assessment_id 
+inner join h_kpa_instance_score s on h.kpa_instance_id=s.kpa_instance_id and a.assessment_id=s.assessment_id and s.assessor_id=hu.user_id
+ where d.assessment_type_id=1 and hu.role=4;
+ 
+ drop  table if exists t_kq;
+create  table t_kq(assessment_id int(11),kpa_instance_id int(11),key_question_id int(11),key_question_instance_id int(11),d_rating_rating_id int(11),assessor_id int(11), INDEX(assessment_id,assessor_id,kpa_instance_id)) ;
+insert into t_kq
+select ks.assessment_id,kpa_instance_id,key_question_id,key_question_instance_id,d_rating_rating_id,assessor_id from 
+h_kq_instance_score ks inner join h_kpa_kq using(key_question_instance_id)
+inner join h_assessment_user hu on ks.assessor_id=hu.user_id and ks.assessment_id=hu.assessment_id 
+inner join d_assessment a on a.assessment_id=ks.assessment_id
+inner join d_diagnostic d on d.diagnostic_id=a.diagnostic_id 
+where d.assessment_type_id=1 and  hu.role=4;
+;            
+
+drop   table if exists t_sq;
+create   table t_sq(assessment_id int(11),core_question_id int(11),key_question_instance_id int(11),core_question_instance_id int(11),d_rating_rating_id int(11),assessor_id int(11),
+index idx_js(assessment_id,assessor_id,key_question_instance_id));
+insert into t_sq
+select cs.assessment_id,kc.core_question_id,kc.key_question_instance_id,cs.core_question_instance_id,cs.d_rating_rating_id,cs.assessor_id from 
+h_kq_cq kc inner join h_cq_score cs on cs.core_question_instance_id = kc.core_question_instance_id
+inner join h_assessment_user hu on cs.assessor_id=hu.user_id and cs.assessment_id=hu.assessment_id
+inner join d_assessment a on a.assessment_id=cs.assessment_id
+inner join d_diagnostic d on d.diagnostic_id=a.diagnostic_id 
+where d.assessment_type_id=1 and  hu.role=4
+;		
+
+
+drop  table if exists t_js;
+create  table t_js(assessment_id int(11),core_question_instance_id int(11),judgement_statement_id int(11),judgement_statement_instance_id int(11),rating_id int(11),assessor_id int(11),
+index idx_js(assessment_id,assessor_id,core_question_instance_id));
+insert into t_js 
+select fs.assessment_id,cj.core_question_instance_id,cj.judgement_statement_id,fs.judgement_statement_instance_id,fs.rating_id,fs.assessor_id from 
+h_cq_js_instance cj inner join f_score fs on fs.judgement_statement_instance_id = cj.judgement_statement_instance_id
+inner join h_assessment_user hu on fs.assessor_id=hu.user_id and fs.assessment_id=hu.assessment_id
+ inner join d_assessment a on a.assessment_id=fs.assessment_id
+ inner join d_diagnostic d on d.diagnostic_id=a.diagnostic_id 
+where d.assessment_type_id=1 and hu.role=4 and fs.isFinal=1 ;
+
+
+CREATE    
+VIEW `v_aqs` AS
+    SELECT 
+        `cl`.`client_id` AS `client_id`,
+        `cl`.`country_id` AS `country_id`,
+        `cl`.`city_id` AS `city_id`,
+        `cl`.`state_id` AS `state_id`,
+        `cl`.`province` AS `province`,
+        `cl`.`client_name` AS `client_name`,
+        `a`.`assessment_id` AS `assessment_id`,
+        `a`.`tier_id` AS `tier_id`,
+        `a`.`award_scheme_id` AS `award_scheme_id`,
+        `a`.`diagnostic_id` AS `diagnostic_id`,
+        `aqs`.`board_id` AS `board_id`,
+        `aqs`.`school_type_id` AS `school_type_id`,
+        `aqs`.`no_of_students` AS `no_of_students`,
+        `aqs`.`student_type_id` AS `student_type_id`,
+        `aqs`.`annual_fee` AS `annual_fee`,
+        `aqs`.`school_aqs_pref_start_date` AS `school_aqs_pref_start_date`,
+        `aqs`.`school_aqs_pref_end_date` AS `school_aqs_pref_end_date`,
+        `aqs`.`school_region_id` AS `school_region_id`,
+        `aqs`.`medium_instruction` AS `medium_instruction`,
+        YEAR(STR_TO_DATE(`aqs`.`school_aqs_pref_end_date`,
+                    '%m/%d/%Y')) AS `year`,
+        MONTH(STR_TO_DATE(`aqs`.`school_aqs_pref_end_date`,
+                    '%m/%d/%Y')) AS `month`,
+        `aqs`.`classes_from` AS `classes_from`,
+        `aqs`.`classes_to` AS `classes_to`,
+        `cn`.`network_id` AS `network_id`
+    FROM
+        ((((((`d_assessment` `a`
+        JOIN `d_client` `cl` ON ((`a`.`client_id` = `cl`.`client_id`)))
+        JOIN `d_diagnostic` `d` ON (((`a`.`diagnostic_id` = `d`.`diagnostic_id`)
+            AND (`d`.`assessment_type_id` = 1))))
+        JOIN `d_AQS_data` `aqs` ON ((`a`.`aqsdata_id` = `aqs`.`id`)))
+        JOIN `d_fees` `f` ON ((`f`.`fee_text` = `aqs`.`annual_fee`)))
+        JOIN `d_school_strength` `str` ON ((`str`.`strength_text` = `aqs`.`no_of_students`)))
+        LEFT JOIN `h_client_network` `cn` ON ((`cn`.`client_id` = `cl`.`client_id`)))

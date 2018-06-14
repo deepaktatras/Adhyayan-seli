@@ -1,0 +1,18 @@
+UPDATE `d_reports` SET `report_name` = 'Career Readiness Review Overview report' WHERE `d_reports`.`report_id` = 8;
+
+
+CREATE TABLE `d_key_question_heading` (
+  `key_question_id` int(11) NOT NULL,
+  `key_heading` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='for center and organisation reports in student assessment';
+
+
+
+
+ALTER TABLE `d_key_question_heading`
+  ADD PRIMARY KEY (`key_question_id`);
+
+
+
+ALTER TABLE `d_key_question_heading` ADD FOREIGN KEY (`key_question_id`) REFERENCES `adh`.`d_key_question`(`key_question_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+

@@ -1,0 +1,37 @@
+CREATE TABLE `d_aqs_rounds` (
+  `id` int(11) NOT NULL,
+  `aqs_round` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `d_aqs_rounds`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `d_aqs_rounds`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+INSERT INTO `d_aqs_rounds` (`id`, `aqs_round`) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
+
+
+
+ALTER TABLE `d_assessment` ADD `aqs_round` INT NOT NULL AFTER `award_scheme_id`;
+ALTER TABLE `d_assessment` ADD `facilitator_id` INT NOT NULL AFTER `client_id`;
+
+
+//Not done on staging
+INSERT INTO `d_user_capability` (`slug`, `description`) VALUES ('manage_workshop', 'user can able add/edit workshops');
+ALTER TABLE `d_workshop_facilitator` ADD `create_date` DATETIME NOT NULL AFTER `workshop_location`;
+ALTER TABLE `d_workshop_facilitator` ADD `created_by` INT NOT NULL AFTER `create_date`;
+ALTER TABLE `d_workshop_facilitator` ADD `last_modify_date` DATETIME NOT NULL AFTER `created_by`;
+ALTER TABLE `d_workshop_facilitator` ADD `last_modify_by` INT NOT NULL AFTER `last_modify_date`;
+ALTER TABLE `d_workshop_facilitator` ADD `workshop_description` TEXT NOT NULL AFTER `workshop_location`;
+ALTER TABLE `d_workshop_facilitator` CHANGE `workshop_date` `workshop_date_to` DATE NULL DEFAULT NULL;
+ALTER TABLE `d_workshop_facilitator` ADD `workshop_date_from` DATE NOT NULL AFTER `workshop_name`;
+ALTER TABLE `h_workshop_facilitator_user` ADD `mode_attendance` VARCHAR(100) NOT NULL AFTER `sub_user_type_role`;
+ALTER TABLE `h_workshop_facilitator_user` ADD `p_a` VARCHAR(1) NOT NULL AFTER `mode_attendance`;
+ALTER TABLE `d_workshop_facilitator` CHANGE `workshop_location` `workshop_location` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `d_workshop_facilitator` ADD `workshop_programme` VARCHAR(100) NOT NULL AFTER `workshop_location`;

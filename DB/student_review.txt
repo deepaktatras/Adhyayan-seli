@@ -1,0 +1,56 @@
+INSERT INTO `d_assessment_type` (`assessment_type_id`, `assessment_type_name`) VALUES ('4', 'Student');
+
+INSERT INTO `h_rating_level_scheme` (`rating_scheme_id`, `rating_level_id`, `rating_id`, `rating_level_order`) VALUES
+(4, 1, 21, 1),
+(4, 1, 22, 2),
+(4, 1, 23, 3),
+(4, 1, 24, 4),
+(4, 1, 25, 5),
+(4, 2, 21, 1),
+(4, 2, 22, 2),
+(4, 2, 23, 3),
+(4, 2, 24, 4),
+(4, 2, 25, 5),
+(4, 3, 21, 1),
+(4, 3, 22, 2),
+(4, 3, 23, 3),
+(4, 3, 24, 4),
+(4, 3, 25, 5),
+(4, 4, 1, 1),
+(4, 4, 2, 2),
+(4, 4, 3, 3),
+(4, 4, 4, 4),
+(4, 3, 20, 6),
+(4, 2, 20, 6);
+
+INSERT INTO `d_diagnostic_limit_matrix` (`limit_id`, `limit_question_type`, `limit_assessment_type`, `limit_min`, `limit_max`) VALUES
+(9, 'kpa', '4', '1', '1'),
+(10, 'kq', '4', '3', '3'),
+(11, 'cq', '4', '3', '3'),
+(12, 'jss', '4', '3', '3');
+
+INSERT INTO `d_teacher_category` (`teacher_category_id`, `teacher_category`) VALUES ('7', 'Student');
+
+CREATE TABLE `d_student_review_type` ( `review_student_type_id` INT NOT NULL AUTO_INCREMENT , `review_student_type` VARCHAR(100) NOT NULL , PRIMARY KEY (`review_student_type_id`)) ENGINE = InnoDB;
+INSERT INTO `d_student_review_type` (`review_student_type_id`, `review_student_type`) VALUES (NULL, 'School'), (NULL, 'College');
+UPDATE `d_student_review_type` SET `review_student_type` = 'Individual' WHERE `d_student_review_type`.`review_student_type_id` = 1;
+
+CREATE TABLE `adh`.`d_student_review_batch` ( `student_review_batch_id` INT NOT NULL AUTO_INCREMENT , `student_review_batch` VARCHAR(100) NOT NULL , PRIMARY KEY (`student_review_batch_id`)) ENGINE = InnoDB;
+
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-1'), (NULL, 'Batch-2');
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-3'), (NULL, 'Batch-4');
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-5'), (NULL, 'Batch-6');
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-7'), (NULL, 'Batch-8');
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-9'), (NULL, 'Batch-10');
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-11'), (NULL, 'Batch-12');
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-13'), (NULL, 'Batch-14');
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-15'), (NULL, 'Batch-16');
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-17'), (NULL, 'Batch-18');
+INSERT INTO `d_student_review_batch` (`student_review_batch_id`, `student_review_batch`) VALUES (NULL, 'Batch-19'), (NULL, 'Batch-20');
+
+ALTER TABLE `d_group_assessment` ADD `student_review_type_id` INT NOT NULL AFTER `group_assessment_name`;
+ALTER TABLE `d_group_assessment` ADD `student_review_form_id` INT NOT NULL AFTER `student_review_type_id`;
+
+INSERT INTO `d_reports` (`report_id`, `report_name`, `assessment_type_id`, `isIndividualAssessmentReport`) VALUES (NULL, 'Student Performance Overview report', '4', '0');
+INSERT INTO `d_reports` (`report_id`, `report_name`, `assessment_type_id`, `isIndividualAssessmentReport`) VALUES (NULL, 'Individual Teacher Report', '4', '1'), (NULL, 'Single Teacher Recommendation Report', '4', '1');
+ALTER TABLE `d_diagnostic` CHANGE `name` `name` VARCHAR(60) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;

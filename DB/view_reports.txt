@@ -1,0 +1,23 @@
+CREATE TABLE `h_network_report_student` (
+  `h_network_report_student_id` int(11) NOT NULL,
+  `network_report_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `province_id` int(11) NOT NULL,
+  `network_id` int(11) NOT NULL,
+  `round_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `h_network_report_student`
+  ADD PRIMARY KEY (`h_network_report_student_id`),
+  ADD UNIQUE KEY `client_id` (`client_id`,`province_id`,`network_id`,`round_id`),
+  ADD KEY `network_report_id` (`network_report_id`),
+  ADD KEY `round_id` (`round_id`);
+
+ALTER TABLE `h_network_report_student`
+  MODIFY `h_network_report_student_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `h_network_report_student`
+  ADD CONSTRAINT `h_network_report_student_ibfk_1` FOREIGN KEY (`network_report_id`) REFERENCES `h_network_report` (`network_report_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `h_network_report_student_ibfk_3` FOREIGN KEY (`round_id`) REFERENCES `d_aqs_rounds` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+

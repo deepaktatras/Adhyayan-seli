@@ -1,0 +1,171 @@
+CREATE TABLE `d_workshops` (
+  `workshop_id` int(11) NOT NULL,
+  `workshop_name` varchar(255) DEFAULT NULL,
+  `workshop_date_from` date NOT NULL,
+  `workshop_date_to` date DEFAULT NULL,
+  `workshop_location` text,
+  `programme_id` int(11) NOT NULL,
+  `workshop_description` text NOT NULL,
+  `create_date` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `last_modify_date` datetime NOT NULL,
+  `last_modify_by` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `d_workshops`
+--
+ALTER TABLE `d_workshops`
+  ADD PRIMARY KEY (`workshop_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `d_workshops`
+--
+ALTER TABLE `d_workshops`
+  MODIFY `workshop_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
+--------------------------------------------------------------------
+
+CREATE TABLE `h_workshops_user` (
+  `id` int(11) NOT NULL,
+  `workshop_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `workshops_user_role_id` int(11) DEFAULT NULL,
+  `mode_attendance` varchar(100) NOT NULL,
+  `attendance_status` varchar(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `h_workshops_user`
+--
+ALTER TABLE `h_workshops_user`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workshop_id` (`workshop_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `h_workshops_user`
+--
+ALTER TABLE `h_workshops_user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+----------------------------------------------------------------------
+
+CREATE TABLE `d_workshops_role` (
+  `id` int(11) NOT NULL,
+  `workshop_sub_role_name` varchar(45) NOT NULL,
+  `workshop_sub_role_order` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `d_workshops_role`
+--
+
+INSERT INTO `d_workshops_role` (`id`, `workshop_sub_role_name`, `workshop_sub_role_order`) VALUES
+(1, 'Leader', 1),
+(2, 'Co-Facilitator', 2),
+(3, 'Attended', 3);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `d_workshops_role`
+--
+ALTER TABLE `d_workshops_role`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `d_workshops_role`
+--
+ALTER TABLE `d_workshops_role`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+-------------------------------------------------------------------------
+
+CREATE TABLE `d_programme_module` (
+  `programme_id` int(11) NOT NULL,
+  `programme_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `d_programme_module`
+--
+
+INSERT INTO `d_programme_module` (`programme_id`, `programme_name`) VALUES
+(1, 'TAP'),
+(2, 'TFP'),
+(3, 'AQS');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `d_programme_module`
+--
+ALTER TABLE `d_programme_module`
+  ADD PRIMARY KEY (`programme_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `d_programme_module`
+--
+ALTER TABLE `d_programme_module`
+  MODIFY `programme_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+///////////////////////////////////////////////////////////////////////////////////
+
+ALTER TABLE `adhyayan_staging_app_adhyayan_reloaded`.`h_workshops_user` 
+ADD INDEX `fk_workshops_user_workshops_role_idx` (`workshops_user_role_id` ASC);
+ALTER TABLE `adhyayan_staging_app_adhyayan_reloaded`.`h_workshops_user` 
+ADD CONSTRAINT `fk_workshops_user_users_user_id`
+  FOREIGN KEY (`user_id`)
+  REFERENCES `adhyayan_staging_app_adhyayan_reloaded`.`d_user` (`user_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_workshops_user_workshops`
+  FOREIGN KEY (`workshop_id`)
+  REFERENCES `adhyayan_staging_app_adhyayan_reloaded`.`d_workshops` (`workshop_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_workshops_user_workshops_role`
+  FOREIGN KEY (`workshops_user_role_id`)
+  REFERENCES `adhyayan_staging_app_adhyayan_reloaded`.`d_workshops_role` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `adhyayan_staging_app_adhyayan_reloaded`.`d_workshops` 
+ADD INDEX `fk_workshops_programme_module_idx` (`programme_id` ASC);
+ALTER TABLE `adhyayan_staging_app_adhyayan_reloaded`.`d_workshops` 
+ADD CONSTRAINT `fk_workshops_programme_module`
+  FOREIGN KEY (`programme_id`)
+  REFERENCES `adhyayan_staging_app_adhyayan_reloaded`.`d_programme_module` (`programme_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;

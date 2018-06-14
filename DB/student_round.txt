@@ -1,0 +1,2 @@
+ALTER TABLE `d_group_assessment` ADD `student_round` INT NOT NULL AFTER `grp_aqsdata_id`;
+update `d_group_assessment` set `student_round`=1 WHERE `assessment_type_id`=4;

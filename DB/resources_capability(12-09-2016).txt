@@ -1,0 +1,1 @@
+INSERT INTO `adh`.`d_user_capability` (`slug`, `description`, `order`) VALUES ('upload_resources', 'user can upload resources', '0');

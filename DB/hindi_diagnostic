@@ -1,0 +1,53 @@
+ALTER TABLE `h_lang_translation` DROP PRIMARY KEY, ADD INDEX (`equivalence_id`, `language_id`) USING BTREE;
+
+ALTER TABLE `h_lang_translation` DROP INDEX `equivalence_id`, ADD UNIQUE `equivalence_id` (`equivalence_id`, `language_id`) USING BTREE; 
+
+ALTER TABLE `h_lang_translation` ADD `lang_translation_id` INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`lang_translation_id`);
+
+ALTER TABLE `h_lang_translation` ADD `isActive` INT NOT NULL AFTER `translation_text`;
+
+ALTER TABLE `h_lang_translation` ADD `parent_id` INT NULL AFTER `isActive`;
+ALTER TABLE `h_lang_translation` CHANGE `parent_id` `parent_lang_translation_id` INT(11) NULL DEFAULT NULL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////
+
+insert into h_lang_trans_diagnostics_details (SELECT 0 as trans_diagnostics_details_id,b.lang_translation_id,a.date_created,a.isPublished,a.date_published,a.user_id,a.user_id  FROM d_diagnostic a left join h_lang_translation b on  a.equivalence_id=b.equivalence_id where translation_type_id=7)
+
+
+
+/////////////////////////////////////////////
+
+ALTER TABLE `d_kpa` CHANGE `kpa_name` `kpa_name1` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `d_key_question` CHANGE `key_question_text` `key_question_text1` VARCHAR(1000) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `d_core_question` CHANGE `core_question_text` `core_question_text1` VARCHAR(1000) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `d_judgement_statement` CHANGE `judgement_statement_text` `judgement_statement_text1` VARCHAR(1000) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `d_award` CHANGE `award_name` `award_name1` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `d_recommendation` CHANGE `recommendation_text` `recommendation_text1` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `d_diagnostic` CHANGE `name` `name1` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `d_rating` CHANGE `rating` `rating1` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `d_award` ADD `equivalence_id` INT NULL AFTER `award_name1`;
+
+
+
+ALTER TABLE `d_diagnostic` CHANGE `isdefaultselfreview` `isdefaultselfreview` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `d_diagnostic` CHANGE `isfreeselfreview` `isfreeselfreview` INT(11) NOT NULL DEFAULT '0';
+
+
+

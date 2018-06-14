@@ -1,0 +1,1 @@
+INSERT INTO `d_user_capability` (`slug`, `description`) VALUES ('upload_assessor_details', 'user can upload assessor details in excel file');

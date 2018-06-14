@@ -1,0 +1,2 @@
+ALTER TABLE `h_resource_file` ADD `resource_link_type` VARCHAR(20) NOT NULL AFTER `file_id`, ADD `resource_url` VARCHAR(255) NOT NULL AFTER `resource_link_type`;
+ALTER TABLE `h_resource_file` CHANGE `file_id` `file_id` INT(11) NULL DEFAULT NULL;

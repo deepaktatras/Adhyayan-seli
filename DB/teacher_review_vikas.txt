@@ -1,0 +1,4 @@
+ALTER TABLE `h_group_assessment_teacher` ADD `school_level_id` INT NOT NULL AFTER `assessor_id`;
+ALTER TABLE `h_group_assessment_teacher` ADD INDEX(`school_level_id`);
+
+ALTER TABLE `h_group_assessment_teacher` ADD CONSTRAINT `fk_tchr_group_school_level` FOREIGN KEY (`school_level_id`) REFERENCES `adh`.`d_school_type`(`school_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
